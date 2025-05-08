@@ -1,10 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://dlejnuhf6u3py"]
+[gd_scene load_steps=7 format=3 uid="uid://dlejnuhf6u3py"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gv5m4"]
 size = Vector3(20, 1, 20)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_f3sb7"]
 size = Vector2(20, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gv5m4"]
+albedo_color = Color(1, 0.258824, 0.286275, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
+sky_top_color = Color(0.405256, 0.694309, 0.910752, 1)
+sky_horizon_color = Color(0.692243, 0.645721, 0.610373, 1)
+sky_curve = 0.0832177
+ground_bottom_color = Color(0.300103, 0.664629, 0.967693, 1)
+ground_horizon_color = Color(0.846154, 0.769817, 0.743046, 1)
+ground_curve = 0.01
+
+[sub_resource type="Sky" id="Sky_fj7yv"]
+sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
+
+[sub_resource type="Environment" id="Environment_tlwt5"]
+background_mode = 2
+sky = SubResource("Sky_fj7yv")
 
 [node name="World" type="Node3D"]
 
@@ -16,3 +34,7 @@ shape = SubResource("BoxShape3D_gv5m4")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("PlaneMesh_f3sb7")
+surface_material_override/0 = SubResource("StandardMaterial3D_gv5m4")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tlwt5")
