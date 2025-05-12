@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dlejnuhf6u3py"]
+[gd_scene load_steps=11 format=3 uid="uid://dlejnuhf6u3py"]
 
 [ext_resource type="Texture2D" uid="uid://fxt5wwlpt5uj" path="res://wooden_floor_texture.jpg" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://cia2m8qs2pupe" path="res://player.tscn" id="2_fj7yv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gv5m4"]
 size = Vector3(20, 1, 20)
@@ -53,3 +54,10 @@ environment = SubResource("Environment_tlwt5")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.666611, 0.745406, 0, -0.745406, 0.666611, 0, 4.2151, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_fj7yv")]
+
+[node name="CameraPivot" type="Marker3D" parent="Player"]
+
+[node name="Camera3D" type="Camera3D" parent="Player/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49076, 0)
