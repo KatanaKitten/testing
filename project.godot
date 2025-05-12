@@ -8,8 +8,23 @@
 
 config_version=5
 
+[Testing]
+
+config/ninetailsrabbit.interaction_kit_3d/interactables_collision_layer=6
+config/ninetailsrabbit.interaction_kit_3d/grabbables_collision_layer=7
+
 [application]
 
 config/name="Testing"
+run/main_scene="uid://dlejnuhf6u3py"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalInteractionEvents="*res://addons/ninetailsrabbit.interaction_kit_3d/src/global_interaction_events.gd"
+ScanInteractableLayer="*res://addons/ninetailsrabbit.interaction_kit_3d/src/scan/scan_interactable_layer.tscn"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/cesium_godot/plugin.cfg", "res://addons/godot4.3_fps_character_controller/plugin.cfg", "res://addons/ninetailsrabbit.interaction_kit_3d/plugin.cfg", "res://addons/tattomoosa.vision_cone_3d/plugin.cfg")
