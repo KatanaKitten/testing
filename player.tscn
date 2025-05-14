@@ -10,9 +10,7 @@
 floor_constant_speed = true
 script = ExtResource("1_4flbx")
 
-[node name="Pivot" type="Node3D" parent="."]
-
-[node name="model" type="MeshInstance3D" parent="Pivot"]
+[node name="model" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_4flbx")
 skeleton = NodePath("")
@@ -20,3 +18,8 @@ skeleton = NodePath("")
 [node name="hitbox" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_sh265")
+
+[node name="CameraPivot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
