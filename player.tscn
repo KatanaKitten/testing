@@ -1,10 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://cia2m8qs2pupe"]
+[gd_scene load_steps=7 format=3 uid="uid://cia2m8qs2pupe"]
 
 [ext_resource type="Script" uid="uid://bx0g4lv4bthg1" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://t1mwsmpd0xea" path="res://hud_contents.gd" id="2_i3pqv"]
+[ext_resource type="Texture2D" uid="uid://b8hl7aitdpgdd" path="res://Crosshair-PNG-Pic.png" id="3_hqtel"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4flbx"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4flbx"]
+font_size = 32
 
 [node name="Player" type="CharacterBody3D"]
 floor_constant_speed = true
@@ -23,3 +28,46 @@ shape = SubResource("CapsuleShape3D_sh265")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="HUD_Panel" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Hud_Contents" type="Label" parent="HUD/HUD_Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -96.0
+offset_right = 96.0
+offset_bottom = 45.0
+grow_horizontal = 2
+text = "Speed: N/A"
+label_settings = SubResource("LabelSettings_4flbx")
+horizontal_alignment = 1
+script = ExtResource("2_i3pqv")
+
+[node name="CrossHair" type="TextureRect" parent="HUD/HUD_Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_hqtel")
+expand_mode = 1
