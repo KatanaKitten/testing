@@ -1,8 +1,8 @@
 extends Label
 
-@onready var player: CharacterBody3D = $"...."
-
 @onready var label: Label = $"."
+func _ready():
+	$"....".getSpeed.connect()
 
-func _process(delta: float) -> void:
-	label.text = "Speed: " + str(player.speed) + " m/s"
+func _process(_delta):
+	label.text = "Speed: " + str() + " m/s"

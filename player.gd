@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-
+signal getSpeed(speed)
 @export var speed = 14
 @export var gravity = 9.8
 @export var sensitivity = 0.003
@@ -47,4 +47,5 @@ func _physics_process(delta):
 
 	# Moving the Character
 	velocity = target_velocity
+	getSpeed.emit(speed)
 	move_and_slide()
