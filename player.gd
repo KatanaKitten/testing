@@ -10,8 +10,9 @@ const sensitivity = 0.003
 
 var gravity = 9.8
 
-@onready var head = $Head
-@onready var camera = $Head/Camera3D
+@onready var neck = $Neck
+@onready var head = $Neck/Head
+@onready var camera = $Neck/Head/Camera3D
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -31,8 +32,12 @@ func _physics_process(delta):
 	if Input.is_action_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	if Input.is_action_just_pressed("jump") and is_on_wall_only():
-		velocity = get_wall_normal() * JUMP_VELOCITY
-		velocity.y += JUMP_VELOCITY * 0.7
+		velocity = get_wall_normal() * JUMP_VELOCITY * 2
+		velocity.y += JUMP_VELOCITY * 1.4
+	if is_on_wall_only():
+		velocity.y -= - ((gravity / 2) * delta)
+	else:
+		neck.rotation_degrees.z = lerp(camera.rotation_degrees.z, float(0), 2*delta)
 	
 	if Input.is_action_pressed("sprint"):
 		speed = SPRINT_SPEED
