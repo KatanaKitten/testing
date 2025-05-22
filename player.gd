@@ -8,6 +8,11 @@ const SPRINT_SPEED = 28
 const JUMP_VELOCITY = 5
 const sensitivity = 0.003
 
+@export var wallrun_angle = float(15)
+var wallrun_current_angle = 0
+var side = ""
+
+
 var gravity = 9.8
 
 @onready var neck = $Neck
@@ -16,6 +21,20 @@ var gravity = 9.8
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+
+func get_side(point):
+	point = to_local(point)
+	
+	if point.x > 0:
+		return "RIGHT"
+	elif point.x < 0:
+		return "LEFT"
+	else:
+		return "CENTER"
+
+
+
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -36,9 +55,21 @@ func _physics_process(delta):
 		velocity.y += JUMP_VELOCITY * 1.4
 	if is_on_wall_only():
 		velocity.y -= - ((gravity / 2) * delta)
+		side = get_side(get_wall_normal()) #may need to use raycasting
+		if side == "RIGHT":
+			wallrun_current_angle += delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		elif side == "LEFT":
+			wallrun_current_angle -= delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
 	else:
-		neck.rotation_degrees.z = lerp(camera.rotation_degrees.z, float(0), 2*delta)
-	
+		if wallrun_current_angle > 0:
+			wallrun_current_angle -= delta * 40
+			wallrun_current_angle = max(0, wallrun_current_angle)
+		elif wallrun_current_angle < 0:
+			wallrun_current_angle += delta * 40
+			wallrun_current_angle = min(wallrun_current_angle,0)
+	neck.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
 	if Input.is_action_pressed("sprint"):
 		speed = SPRINT_SPEED
 	else:
