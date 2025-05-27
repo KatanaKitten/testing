@@ -6,7 +6,7 @@ var speed
 const WALK_SPEED = 14
 const SPRINT_SPEED = 28
 const JUMP_VELOCITY = 5
-const sensitivity = 0.003
+const sensitivity = 0.002
 
 @export var wallrun_angle = float(10)
 var wallrun_current_angle = 0
@@ -18,7 +18,7 @@ var gravity = 9.8
 @onready var neck = $Neck
 @onready var head = $Neck/Head
 @onready var camera = $Neck/Head/Camera3D
-@onready var casts = $Neck/Head/Casts
+@onready var casts = $Neck/Casts
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -26,13 +26,13 @@ func _ready():
 
 func get_side():
 	
-	if $Neck/Head/Casts/Right.is_colliding():
+	if $Neck/Casts/Right.is_colliding():
 		return "RIGHT"
-	elif $Neck/Head/Casts/Left.is_colliding():
+	elif $Neck/Casts/Left.is_colliding():
 		return "LEFT"
-	elif $Neck/Head/Casts/Front.is_colliding():
+	elif $Neck/Casts/Front.is_colliding():
 		return "Front"
-	elif $Neck/Head/Casts/Back.is_colliding():
+	elif $Neck/Casts/Back.is_colliding():
 		return "Back"
 	else:
 		return "CENTER"
@@ -70,7 +70,7 @@ func _physics_process(delta):
 			wallrun_current_angle -= delta * 60
 			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
 		elif side == "Back":
-			wallrun_current_angle -= delta * 60
+			wallrun_current_angle += delta * 60
 			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
 	else:
 		if wallrun_current_angle > 0:
@@ -79,10 +79,13 @@ func _physics_process(delta):
 		elif wallrun_current_angle < 0:
 			wallrun_current_angle += delta * 40
 			wallrun_current_angle = min(wallrun_current_angle,0)
+		
 	if get_side() == "Right" || "Left":
-		neck.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
+		camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
 	elif get_side() == "Front" || "Back":
-		neck.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
+		camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
+		
+		
 	if Input.is_action_pressed("sprint"):
 		speed = SPRINT_SPEED
 	else:

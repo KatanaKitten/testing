@@ -31,18 +31,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck/Head"]
 
-[node name="Casts" type="Node3D" parent="Neck/Head"]
+[node name="Casts" type="Node3D" parent="Neck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="Right" type="RayCast3D" parent="Neck/Head/Casts"]
+[node name="Right" type="RayCast3D" parent="Neck/Casts"]
 target_position = Vector3(1, 0, 0)
 
-[node name="Left" type="RayCast3D" parent="Neck/Head/Casts"]
+[node name="Left" type="RayCast3D" parent="Neck/Casts"]
 target_position = Vector3(-1, 0, 0)
 
-[node name="Front" type="RayCast3D" parent="Neck/Head/Casts"]
+[node name="Front" type="RayCast3D" parent="Neck/Casts"]
 target_position = Vector3(0, 0, -1)
 
-[node name="Back" type="RayCast3D" parent="Neck/Head/Casts"]
+[node name="Back" type="RayCast3D" parent="Neck/Casts"]
 target_position = Vector3(0, 0, 1)
 
 [node name="HUD" type="CanvasLayer" parent="."]
