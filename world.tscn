@@ -1,7 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://dlejnuhf6u3py"]
+[gd_scene load_steps=18 format=3 uid="uid://dlejnuhf6u3py"]
 
 [ext_resource type="Texture2D" uid="uid://fxt5wwlpt5uj" path="res://wooden_floor_texture.jpg" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://cia2m8qs2pupe" path="res://player.tscn" id="2_fj7yv"]
+[ext_resource type="Script" uid="uid://cljk24lo7hjp4" path="res://area_3d.gd" id="3_tlwt5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
 sky_top_color = Color(0.405256, 0.694309, 0.910752, 1)
@@ -17,6 +18,9 @@ sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
 [sub_resource type="Environment" id="Environment_tlwt5"]
 background_mode = 2
 sky = SubResource("Sky_fj7yv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aqk2v"]
+size = Vector3(1000, 0, 1000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gv5m4"]
 size = Vector3(20, 1, 20)
@@ -59,6 +63,13 @@ environment = SubResource("Environment_tlwt5")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.666611, 0.745406, 0, -0.745406, 0.666611, 0, 4.2151, 0)
 
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
+script = ExtResource("3_tlwt5")
+
+[node name="Death_Floor" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_aqk2v")
+
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
@@ -72,7 +83,7 @@ mesh = SubResource("PlaneMesh_f3sb7")
 surface_material_override/0 = SubResource("StandardMaterial3D_gv5m4")
 
 [node name="Wall" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 6, 0)
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 94.5, 19.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall"]
 shape = SubResource("BoxShape3D_fj7yv")
@@ -82,7 +93,7 @@ material_override = SubResource("StandardMaterial3D_tlwt5")
 mesh = SubResource("BoxMesh_aqk2v")
 
 [node name="Wall2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 6, 0)
+transform = Transform3D(0.965926, 0.517638, 0, -0.258819, 1.93185, 0, 0, 0, 1, 111.352, 18.6064, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2"]
 shape = SubResource("BoxShape3D_fj7yv")
@@ -139,7 +150,7 @@ material_override = SubResource("StandardMaterial3D_tlwt5")
 mesh = SubResource("BoxMesh_aqk2v")
 
 [node name="Parkour Floor" type="StaticBody3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 105, 14, 0)
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 105, 10, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Parkour Floor"]
 shape = SubResource("BoxShape3D_tlwt5")
@@ -148,8 +159,28 @@ debug_fill = false
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Parkour Floor"]
 mesh = SubResource("BoxMesh_036b0")
 
+[node name="Parkour Floor2" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 100, 14, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Parkour Floor2"]
+shape = SubResource("BoxShape3D_tlwt5")
+debug_fill = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Parkour Floor2"]
+mesh = SubResource("BoxMesh_036b0")
+
+[node name="Parkour Floor3" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 107, 19.3146, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Parkour Floor3"]
+shape = SubResource("BoxShape3D_tlwt5")
+debug_fill = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Parkour Floor3"]
+mesh = SubResource("BoxMesh_036b0")
+
 [node name="Wall3" type="StaticBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 30, 6, 20)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 0.5, 0, -1, 0, -4.37114e-08, 88, 22, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall3"]
 shape = SubResource("BoxShape3D_fj7yv")
@@ -159,7 +190,7 @@ material_override = SubResource("StandardMaterial3D_tlwt5")
 mesh = SubResource("BoxMesh_aqk2v")
 
 [node name="Wall4" type="StaticBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 30, 6, 30)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 0.5, 0, -1, 0, -4.37114e-08, 65, 22, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall4"]
 shape = SubResource("BoxShape3D_fj7yv")
@@ -167,3 +198,5 @@ shape = SubResource("BoxShape3D_fj7yv")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wall4"]
 material_override = SubResource("StandardMaterial3D_tlwt5")
 mesh = SubResource("BoxMesh_aqk2v")
+
+[connection signal="reset" from="Area3D" to="Player" method="_on_area_3d_reset"]

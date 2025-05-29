@@ -2,6 +2,10 @@ extends CharacterBody3D
 
 signal getSpeed(speed)
 
+const starting_position = Vector3(0,0,0)
+
+var time
+
 var speed
 const WALK_SPEED = 14
 const SPRINT_SPEED = 28
@@ -38,8 +42,6 @@ func get_side():
 		return "CENTER"
 
 
-
-
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		#print("Mouse Moved")
@@ -49,6 +51,7 @@ func _unhandled_input(event):
 			
 
 func _physics_process(delta):
+	
 	if not is_on_floor(): # If in the air, fall towards the floor. Literally gravity
 		velocity.y = velocity.y - (gravity * delta)
 		
@@ -57,33 +60,34 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_wall_only():
 		velocity = get_wall_normal() * JUMP_VELOCITY * 2
 		velocity.y += JUMP_VELOCITY * 1.4
+		
 	if is_on_wall_only():
 		velocity.y -= - ((gravity / 2) * delta)
-		side = get_side() #may need to use raycasting
-		if side == "RIGHT":
-			wallrun_current_angle += delta * 60
-			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		elif side == "LEFT":
-			wallrun_current_angle -= delta * 60
-			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		elif side == "Front":
-			wallrun_current_angle -= delta * 60
-			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		elif side == "Back":
-			wallrun_current_angle += delta * 60
-			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-	else:
-		if wallrun_current_angle > 0:
-			wallrun_current_angle -= delta * 40
-			wallrun_current_angle = max(0, wallrun_current_angle)
-		elif wallrun_current_angle < 0:
-			wallrun_current_angle += delta * 40
-			wallrun_current_angle = min(wallrun_current_angle,0)
+		#side = get_side() #may need to use raycasting
+		#if side == "RIGHT":
+			#wallrun_current_angle += delta * 60
+			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		#elif side == "LEFT":
+			#wallrun_current_angle -= delta * 60
+			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		#elif side == "Front":
+			#wallrun_current_angle -= delta * 60
+			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		#elif side == "Back":
+			#wallrun_current_angle += delta * 60
+			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+	#else:
+		#if wallrun_current_angle > 0:
+			#wallrun_current_angle -= delta * 40
+			#wallrun_current_angle = max(0, wallrun_current_angle)
+		#elif wallrun_current_angle < 0:
+			#wallrun_current_angle += delta * 40
+			#wallrun_current_angle = min(wallrun_current_angle,0)
 		
-	if get_side() == "Right" || "Left":
-		camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
-	elif get_side() == "Front" || "Back":
-		camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
+	#if get_side() == "Right" || "Left":
+		#camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
+	#elif get_side() == "Front" || "Back":
+		#camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
 		
 		
 	if Input.is_action_pressed("sprint"):
@@ -105,6 +109,11 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 3.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 3.0)
 	
-	
-	getSpeed.emit(speed)
+	#create timer
+	getSpeed.emit(time)
 	move_and_slide()
+
+
+func _on_area_3d_reset() -> void:
+	position = starting_position
+	time = 0
