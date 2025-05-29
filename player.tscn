@@ -89,4 +89,9 @@ mouse_filter = 2
 texture = ExtResource("3_hqtel")
 expand_mode = 1
 
+[node name="Timer" type="Timer" parent="HUD"]
+process_callback = 0
+autostart = true
+
 [connection signal="getSpeed" from="." to="HUD/HUD_Panel/Hud_Contents" method="_on_player_get_speed"]
+[connection signal="timeout" from="HUD/Timer" to="." method="_on_timer_timeout"]

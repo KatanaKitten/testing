@@ -6,7 +6,7 @@ func _ready():
 	pass
 
 func _process(_delta):
-	label.text = "time: " + str(spd) + " s"
+	label.text = "Time: " + str(spd) + " s"
 
 
 

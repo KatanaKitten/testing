@@ -4,7 +4,8 @@ signal getSpeed(speed)
 
 const starting_position = Vector3(0,0,0)
 
-var time
+@onready var timer = $HUD/Timer
+var time = 0
 
 var speed
 const WALK_SPEED = 14
@@ -109,7 +110,7 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 3.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 3.0)
 	
-	#create timer
+	
 	getSpeed.emit(time)
 	move_and_slide()
 
@@ -117,3 +118,9 @@ func _physics_process(delta):
 func _on_area_3d_reset() -> void:
 	position = starting_position
 	time = 0
+
+
+func _on_timer_timeout() -> void:
+	time += 1
+	
+	
