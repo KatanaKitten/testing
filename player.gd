@@ -23,7 +23,7 @@ var gravity = 9.8
 @onready var neck = $Neck
 @onready var head = $Neck/Head
 @onready var camera = $Neck/Head/Camera3D
-@onready var casts = $Neck/Casts
+@onready var casts = $Neck/Head/Casts
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -31,13 +31,13 @@ func _ready():
 
 func get_side():
 	
-	if $Neck/Casts/Right.is_colliding():
+	if $Neck/Head/Casts/Right.is_colliding():
 		return "RIGHT"
-	elif $Neck/Casts/Left.is_colliding():
+	elif $Neck/Head/Casts/Left.is_colliding():
 		return "LEFT"
-	elif $Neck/Casts/Front.is_colliding():
+	elif $Neck/Head/Casts/Front.is_colliding():
 		return "Front"
-	elif $Neck/Casts/Back.is_colliding():
+	elif $Neck/Head/Casts/Back.is_colliding():
 		return "Back"
 	else:
 		return "CENTER"
@@ -49,6 +49,7 @@ func _unhandled_input(event):
 		head.rotate_y(-event.relative.x * sensitivity)
 		camera.rotate_x(-event.relative.y * sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		#casts.rotate_y(-event.relative.x * sensitivity)
 			
 
 func _physics_process(delta):
@@ -64,32 +65,33 @@ func _physics_process(delta):
 		
 	if is_on_wall_only():
 		velocity.y -= - ((gravity / 2) * delta)
-		#side = get_side() #may need to use raycasting
-		#if side == "RIGHT":
-			#wallrun_current_angle += delta * 60
-			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		#elif side == "LEFT":
-			#wallrun_current_angle -= delta * 60
-			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		#elif side == "Front":
-			#wallrun_current_angle -= delta * 60
-			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-		#elif side == "Back":
-			#wallrun_current_angle += delta * 60
-			#wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
-	#else:
-		#if wallrun_current_angle > 0:
-			#wallrun_current_angle -= delta * 40
-			#wallrun_current_angle = max(0, wallrun_current_angle)
-		#elif wallrun_current_angle < 0:
-			#wallrun_current_angle += delta * 40
-			#wallrun_current_angle = min(wallrun_current_angle,0)
+		side = get_side() #may need to use raycasting
+		if side == "RIGHT":
+			wallrun_current_angle += delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		elif side == "LEFT":
+			wallrun_current_angle -= delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		elif side == "Front":
+			wallrun_current_angle -= delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		elif side == "Back":
+			wallrun_current_angle += delta * 60
+			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+	else:
+		if wallrun_current_angle > 0:
+			wallrun_current_angle -= delta * 40
+			wallrun_current_angle = max(0, wallrun_current_angle)
+		elif wallrun_current_angle < 0:
+			wallrun_current_angle += delta * 40
+			wallrun_current_angle = min(wallrun_current_angle,0)
 		
-	#if get_side() == "Right" || "Left":
-		#camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
-	#elif get_side() == "Front" || "Back":
-		#camera.rotation_degrees = Vector3(0,0,1) * wallrun_current_angle
-		
+	if side == "RIGHT" || "LEFT":
+		neck.rotation_degrees = Vector3(1,0,0) * -wallrun_current_angle
+	elif side == "Front" || "Back":
+		neck.rotation_degrees = Vector3(0,0,1) * -wallrun_current_angle
+	if head:
+		pass
 		
 	if Input.is_action_pressed("sprint"):
 		speed = SPRINT_SPEED

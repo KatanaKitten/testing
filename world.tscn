@@ -149,6 +149,29 @@ shape = SubResource("BoxShape3D_fj7yv")
 material_override = SubResource("StandardMaterial3D_tlwt5")
 mesh = SubResource("BoxMesh_aqk2v")
 
+[node name="Wallrun Toggle3" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 20, 0, 30)
+
+[node name="Wall3" type="StaticBody3D" parent="Wallrun Toggle3"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 6, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wallrun Toggle3/Wall3"]
+shape = SubResource("BoxShape3D_fj7yv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wallrun Toggle3/Wall3"]
+material_override = SubResource("StandardMaterial3D_tlwt5")
+mesh = SubResource("BoxMesh_aqk2v")
+
+[node name="Wall4" type="StaticBody3D" parent="Wallrun Toggle3"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10, 6, 10)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wallrun Toggle3/Wall4"]
+shape = SubResource("BoxShape3D_fj7yv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wallrun Toggle3/Wall4"]
+material_override = SubResource("StandardMaterial3D_tlwt5")
+mesh = SubResource("BoxMesh_aqk2v")
+
 [node name="Parkour Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 105, 10, 0)
 
