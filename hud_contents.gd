@@ -7,7 +7,7 @@ func _ready():
 
 func _process(_delta):
 	label.text = "Time: " + str(spd) + " s"
-
+	
 
 
 

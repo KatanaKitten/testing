@@ -7,6 +7,8 @@ const starting_position = Vector3(0,0,0)
 @onready var timer = $HUD/Timer
 var time = 0
 
+
+
 var speed
 const WALK_SPEED = 14
 const SPRINT_SPEED = 28
@@ -23,7 +25,7 @@ var gravity = 9.8
 @onready var neck = $Neck
 @onready var head = $Neck/Head
 @onready var camera = $Neck/Head/Camera3D
-@onready var casts = $Neck/Head/Casts
+@onready var casts = $Casts
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -31,41 +33,20 @@ func _ready():
 
 func get_side():
 	
-	if $Neck/Head/Casts/Right.is_colliding():
+	if $Casts/Right.is_colliding():
 		return "RIGHT"
-	elif $Neck/Head/Casts/Left.is_colliding():
+	elif $Casts/Left.is_colliding():
 		return "LEFT"
-	elif $Neck/Head/Casts/Front.is_colliding():
+	elif $Casts/Front.is_colliding():
 		return "Front"
-	elif $Neck/Head/Casts/Back.is_colliding():
+	elif $Casts/Back.is_colliding():
 		return "Back"
 	else:
 		return "CENTER"
 
-
-func _unhandled_input(event):
-	if event is InputEventMouseMotion:
-		#print("Mouse Moved")
-		head.rotate_y(-event.relative.x * sensitivity)
-		camera.rotate_x(-event.relative.y * sensitivity)
-		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
-		#casts.rotate_y(-event.relative.x * sensitivity)
-			
-
-func _physics_process(delta):
-	
-	if not is_on_floor(): # If in the air, fall towards the floor. Literally gravity
-		velocity.y = velocity.y - (gravity * delta)
-		
-	if Input.is_action_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-	if Input.is_action_just_pressed("jump") and is_on_wall_only():
-		velocity = get_wall_normal() * JUMP_VELOCITY * 2
-		velocity.y += JUMP_VELOCITY * 1.4
-		
+func _handle_wallrun(delta):
+	side = get_side() #may need to use raycasting
 	if is_on_wall_only():
-		velocity.y -= - ((gravity / 2) * delta)
-		side = get_side() #may need to use raycasting
 		if side == "RIGHT":
 			wallrun_current_angle += delta * 60
 			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
@@ -78,21 +59,72 @@ func _physics_process(delta):
 		elif side == "Back":
 			wallrun_current_angle += delta * 60
 			wallrun_current_angle = clamp(wallrun_current_angle, -wallrun_angle, wallrun_angle)
+		else:
+			if wallrun_current_angle > 0:
+				wallrun_current_angle -= delta * 40
+				wallrun_current_angle = max(0, wallrun_current_angle)
+			elif wallrun_current_angle < 0:
+				wallrun_current_angle += delta * 40
+				wallrun_current_angle = min(wallrun_current_angle,0)
+			
+		if side == "RIGHT" || "LEFT":
+			neck.rotation_degrees = Vector3(1,0,0) * -wallrun_current_angle
+		elif side == "Front" || "Back":
+			neck.rotation_degrees = Vector3(0,0,1) * -wallrun_current_angle
+		if head:
+			pass
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		#print("Mouse Moved")
+		head.rotate_y(-event.relative.x * sensitivity)
+		camera.rotate_x(-event.relative.y * sensitivity)
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		#casts.rotate_y(-event.relative.x * sensitivity)
+			
+
+func _physics_process(delta):
+	
+	var cam_tween = camera.create_tween()
+	
+	if not is_on_floor(): # If in the air, fall towards the floor. Literally gravity
+		velocity.y = velocity.y - (gravity * delta)
+		
+	if Input.is_action_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_pressed("jump") and is_on_wall_only():
+		velocity = get_wall_normal() * JUMP_VELOCITY * 2
+		velocity.y += JUMP_VELOCITY * 1.4
+		
+	if is_on_wall_only():
+		velocity.y -= - ((gravity / 4) * delta)
+		# ^fall speed during wall run^
+		
+		#velocity += (get_wall_normal() * -50) * delta
+		# ^makes you stick to wall^
+		
+		if get_side() == "RIGHT":
+			cam_tween.set_trans(Tween.TRANS_SINE)
+			cam_tween.tween_property(neck, "rotation_degrees:z",7.5,0.2)
+			cam_tween.play()
+		elif get_side() == "LEFT":
+			cam_tween.set_trans(Tween.TRANS_SINE)
+			cam_tween.tween_property(neck, "rotation_degrees:z",-7.5,0.2)
+			cam_tween.play()
+		elif get_side() == "Front":
+			cam_tween.set_trans(Tween.TRANS_SINE)
+			cam_tween.tween_property(neck, "rotation_degrees:x",7.5,0.2)
+			cam_tween.play()
+		elif get_side() == "Back":
+			cam_tween.set_trans(Tween.TRANS_SINE)
+			cam_tween.tween_property(neck, "rotation_degrees:x",-7.5,0.2)
+			cam_tween.play()
 	else:
-		if wallrun_current_angle > 0:
-			wallrun_current_angle -= delta * 40
-			wallrun_current_angle = max(0, wallrun_current_angle)
-		elif wallrun_current_angle < 0:
-			wallrun_current_angle += delta * 40
-			wallrun_current_angle = min(wallrun_current_angle,0)
+		cam_tween.tween_property(neck, "rotation_degrees:z",0,0.1)
+		cam_tween.tween_property(neck, "rotation_degrees:x",0,0.1)
+		cam_tween.play()
 		
-	if side == "RIGHT" || "LEFT":
-		neck.rotation_degrees = Vector3(1,0,0) * -wallrun_current_angle
-	elif side == "Front" || "Back":
-		neck.rotation_degrees = Vector3(0,0,1) * -wallrun_current_angle
-	if head:
-		pass
-		
+	
 	if Input.is_action_pressed("sprint"):
 		speed = SPRINT_SPEED
 	else:
@@ -111,8 +143,6 @@ func _physics_process(delta):
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 3.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 3.0)
-	
-	
 	getSpeed.emit(time)
 	move_and_slide()
 
